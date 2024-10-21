@@ -5,6 +5,14 @@ type Props = {
 };
 
 export const config: Config<Props> = {
+  root: {
+    label: "Hello jello",
+    fields: {
+      seo: {
+        type: "text",
+      },
+    },
+  },
   components: {
     HeadingBlock: {
       fields: {
@@ -15,7 +23,7 @@ export const config: Config<Props> = {
       },
       render: ({ title }) => (
         <div style={{ padding: 64 }}>
-          <h1>{title}</h1>
+          <h1 className="text-2xl font-bold">{title}</h1>
         </div>
       ),
     },

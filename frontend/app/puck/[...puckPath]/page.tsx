@@ -15,7 +15,12 @@ import "@measured/puck/puck.css";
 import { Client } from "./client";
 import { Metadata } from "next";
 import { getPage } from "../../../lib/get-page";
-
+import { readFile, readFileSync } from "fs";
+export async function generateStaticParams() {
+  return Object.keys(JSON.parse(readFileSync("database.json", "utf-8")))
+    .map((t) => t.split("/").filter((t) => Boolean(t)))
+    .map((values) => ({ puckPath: values }));
+}
 export async function generateMetadata({
   params: { puckPath = [] },
 }: {
@@ -39,4 +44,4 @@ export default async function Page({
   return <Client path={path} data={data || {}} />;
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";

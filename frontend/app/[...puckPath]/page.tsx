@@ -14,7 +14,14 @@ import { Client } from "./client";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getPage } from "../../lib/get-page";
+import { readFileSync } from "node:fs";
 
+export async function generateStaticParams() {
+  return Object.keys(JSON.parse(readFileSync("database.json", "utf-8")))
+    .map((t) => t.split("/").filter((t) => Boolean(t)))
+    .map((values) => ({ puckPath: values }))
+    .slice(1);
+}
 export async function generateMetadata({
   params: { puckPath = [] },
 }: {
