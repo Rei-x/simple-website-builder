@@ -3,4 +3,12 @@
  */
 module.exports = {
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        hostname: "*",
+        protocol: "https",
+      },
+    ],
+  },
 };
