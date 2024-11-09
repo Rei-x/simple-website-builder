@@ -8,7 +8,7 @@ export const LogoIcon = () => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="lucide lucide-panels-top-left mr-2 w-6 h-6"
+      className="lucide lucide-panels-top-left mr-2 h-6 w-6"
     >
       <rect width="18" height="18" x="3" y="3" rx="2" />
       <path d="M3 9h18" />

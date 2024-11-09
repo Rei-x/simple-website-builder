@@ -10,5 +10,5 @@ export const pageAtom = atomWithStorage<Data>(
   undefined,
   {
     getOnInit: true,
-  }
+  },
 );

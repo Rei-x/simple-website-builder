@@ -7,22 +7,34 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "generate": "openapi-typescript http://localhost:4000/api-json -o ./src/lib/api.ts"
   },
   "dependencies": {
     "@measured/puck": "^0.16.1",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-avatar": "^1.1.1",
+    "@radix-ui/react-collapsible": "^1.1.1",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@radix-ui/react-icons": "^1.3.1",
+    "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.3",
+    "@tanstack/react-query": "^5.59.20",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.3.2",
     "clsx": "^2.1.1",
+    "fets": "^0.8.3",
     "jotai": "^2.10.1",
     "lucide-react": "^0.454.0",
     "next": "^14.2.11",
+    "next-themes": "^0.4.3",
+    "openapi-fetch": "^0.13.0",
+    "openapi-react-query": "^0.2.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "sonner": "^1.7.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   },
@@ -33,8 +45,9 @@
     "@types/react-dom": "^18.0.7",
     "autoprefixer": "^10.4.20",
     "eslint-config-custom": "*",
+    "openapi-typescript": "^7.4.2",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.3"
   }
 }

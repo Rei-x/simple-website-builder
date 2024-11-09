@@ -14,23 +14,23 @@ export interface FooterProps {
 export const Footer = ({ title, groups }: FooterProps) => {
   return (
     <footer id="footer">
-      <hr className="w-11/12 mx-auto" />
+      <hr className="mx-auto w-11/12" />
 
-      <section className="container py-20 grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-x-12 gap-y-8">
+      <section className="container grid grid-cols-2 gap-x-12 gap-y-8 py-20 md:grid-cols-4 xl:grid-cols-6">
         <div className="col-span-full xl:col-span-2">
           <a
             rel="noreferrer noopener"
             href="/"
-            className="font-bold text-xl flex"
+            className="flex text-xl font-bold"
           >
             {title}
           </a>
         </div>
-        {groups.map(({ name, links }) => (
-          <div key={name} className="flex flex-col gap-2">
-            <h3 className="font-bold text-lg">{name}</h3>
+        {groups.map(({ name, links }, i) => (
+          <div key={name + links.toString()} className="flex flex-col gap-2">
+            <h3 className="text-lg font-bold">{name}</h3>
             {links.map(({ name, url }) => (
-              <div key={name}>
+              <div key={url}>
                 <a
                   rel="noreferrer noopener"
                   href={url}

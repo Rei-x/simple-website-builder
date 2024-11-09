@@ -18,14 +18,14 @@ export interface FAQProps {
 
 export const FAQ = ({ title, faqs }: FAQProps) => {
   return (
-    <section id="faq" className="container  py-24 sm:py-32">
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">
-        <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
+    <section id="faq" className="container py-24 sm:py-32">
+      <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+        <span className="bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent">
           {title}
         </span>
       </h2>
 
-      <Accordion type="single" collapsible className="w-full AccordionRoot">
+      <Accordion type="single" collapsible className="AccordionRoot w-full">
         {faqs.map(({ question, answer }, i) => (
           <AccordionItem key={i} value={i.toString()}>
             <AccordionTrigger className="text-left">

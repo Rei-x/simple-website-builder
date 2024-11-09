@@ -5,9 +5,16 @@
   "main": "index.js",
   "scripts": {
     "dev": "pnpm run -r dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write frontend/src backend/src"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.6.8",
+    "typescript": "^5.6.3"
+  }
 }

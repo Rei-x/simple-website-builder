@@ -1,3 +1,10 @@
+import {
+  ExternalLinkIcon,
+  GitHubLogoIcon,
+  LinkedInLogoIcon,
+} from "@radix-ui/react-icons";
+import { Facebook, Instagram, Linkedin } from "lucide-react";
+
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -7,12 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ExternalLinkIcon,
-  GitHubLogoIcon,
-  LinkedInLogoIcon,
-} from "@radix-ui/react-icons";
-import { Facebook, Instagram, Linkedin } from "lucide-react";
 
 interface SociaNetworkslProps {
   name: string;
@@ -123,32 +124,32 @@ export const Team = ({ title, description, members }: TeamProps) => {
 
   return (
     <section id="team" className="container py-24 sm:py-32">
-      <h2 className="text-3xl md:text-4xl font-bold">
-        <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
+      <h2 className="text-3xl font-bold md:text-4xl">
+        <span className="bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent">
           {title}
         </span>
       </h2>
 
-      <p className="mt-4 mb-10 text-muted-foreground">{description}</p>
+      <p className="mb-10 mt-4 text-muted-foreground">{description}</p>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 gap-y-10">
+      <div className="grid gap-8 gap-y-10 md:grid-cols-2 lg:grid-cols-4">
         {members.map(({ imageUrl, name, role, description, links }, i) => (
           <Card
             key={name + i}
-            className="bg-muted/50 relative mt-8 flex flex-col justify-center items-center"
+            className="relative mt-8 flex flex-col items-center justify-center bg-muted/50"
           >
-            <CardHeader className="mt-8 flex justify-center items-center pb-2">
+            <CardHeader className="mt-8 flex items-center justify-center pb-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={imageUrl}
                 alt={`${name} ${role}`}
-                className="absolute -top-12 rounded-full w-24 h-24 aspect-square object-cover"
+                className="absolute -top-12 aspect-square h-24 w-24 rounded-full object-cover"
               />
               <CardTitle className="text-center">{name}</CardTitle>
               <CardDescription className="text-primary">{role}</CardDescription>
             </CardHeader>
 
-            <CardContent className="text-center pb-2">
+            <CardContent className="pb-2 text-center">
               <p>{description}</p>
             </CardContent>
 

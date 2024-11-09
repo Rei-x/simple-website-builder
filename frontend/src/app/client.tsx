@@ -1,9 +1,11 @@
 "use client";
 
 import { Render } from "@measured/puck";
-import config from "../../puck.config";
 import { useAtomValue } from "jotai";
+
 import { pageAtom } from "@/atoms/pageData";
+
+import config from "../../puck.config";
 
 export function Client() {
   const data = useAtomValue(pageAtom);

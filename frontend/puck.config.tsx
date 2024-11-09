@@ -1,11 +1,12 @@
-import { Statistics } from "@/components/Statistics";
 import { type Config } from "@measured/puck";
-import { Team, type TeamProps } from "@/components/Team";
-import { FAQ, type FAQProps } from "@/components/FAQ";
-import { Footer, type FooterProps } from "@/components/Footer";
 import Image from "next/image";
 
-type Props = {
+import { FAQ, type FAQProps } from "@/components/FAQ";
+import { Footer, type FooterProps } from "@/components/Footer";
+import { Statistics } from "@/components/Statistics";
+import { Team, type TeamProps } from "@/components/Team";
+
+export type Props = {
   "Sekcja Hero": { title: string; description: string; imageUrl: string };
   "O nas": {
     title: string;
@@ -21,27 +22,36 @@ type Props = {
   Stopka: FooterProps;
 };
 
-export const config: Config<
-  Props,
-  {
-    title: string;
-  }
-> = {
+export type RootProps = {
+  name: string;
+  title: string;
+  domain: string;
+};
+export const config: Config<Props, RootProps> = {
   root: {
     label: "Strona",
     fields: {
+      name: {
+        label: "Nazwa wyświetlana dla Ciebie",
+        type: "text",
+      },
       title: {
-        label: "Tytuł strony",
+        label: "Tytuł strony w przeglądarce",
+        type: "text",
+      },
+      domain: {
+        label: "Domena",
         type: "text",
       },
     },
     defaultProps: {
+      name: "Strona koła naukowego Solvro",
       title: "KN Solvro",
+      domain: "solvro",
     },
     render: ({ children, title }) => (
       <div id="root">
         <title>{title}</title>
-
         {children}
       </div>
     ),
@@ -61,13 +71,13 @@ export const config: Config<
           "https://cms.solvro.pl/assets/77c395b4-a97b-4c9b-8307-30a5f3105638?key=cover",
       },
       render: ({ title, description, imageUrl }) => (
-        <section className="container grid lg:grid-cols-2 place-items-center py-20 md:py-32 gap-10">
-          <div className="text-center lg:text-start space-y-6">
-            <main className="text-5xl md:text-6xl font-bold">
+        <section className="container grid place-items-center gap-10 py-20 md:py-32 lg:grid-cols-2">
+          <div className="space-y-6 text-center lg:text-start">
+            <main className="text-5xl font-bold md:text-6xl">
               <h1 className="inline">{title}</h1>
             </main>
 
-            <p className="text-xl text-muted-foreground md:w-10/12 mx-auto lg:mx-0">
+            <p className="mx-auto text-xl text-muted-foreground md:w-10/12 lg:mx-0">
               {description}
             </p>
           </div>
@@ -77,7 +87,7 @@ export const config: Config<
               fill
               src={imageUrl}
               alt=""
-              className="w-full object-cover rounded-lg"
+              className="w-full rounded-lg object-cover"
             />
           </div>
         </section>
@@ -133,28 +143,28 @@ export const config: Config<
           "https://solvro.pwr.edu.pl/nextImageExportOptimizer/toPWr.0fcb6a10-opt-640.WEBP",
       },
       render: ({ title, description, stats, image }) => (
-        <section id="about" className="container py-24 sm:py-32">
-          <div className="bg-muted/50 border rounded-lg py-12">
-            <div className="px-6 flex flex-col-reverse md:flex-row gap-8 md:gap-12">
+        <section className="container py-24 sm:py-32">
+          <div className="rounded-lg border bg-muted/50 py-12">
+            <div className="flex flex-col-reverse gap-8 px-6 md:flex-row md:gap-12">
               {image ? (
-                <div className="w-[300px] h-full relative">
+                <div className="relative h-full w-[300px]">
                   {/* eslint-disable-next-line @next/next/no-img-element */},
                   <img
                     src={image}
                     alt=""
-                    className="object-contain rounded-lg"
+                    className="rounded-lg object-contain"
                   />
                 </div>
               ) : null}
 
               <div className="bg-green-0 flex flex-col justify-between">
                 <div className="pb-6">
-                  <h2 className="text-3xl md:text-4xl font-bold">
-                    <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
+                  <h2 className="text-3xl font-bold md:text-4xl">
+                    <span className="bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent">
                       {title}
                     </span>
                   </h2>
-                  <p className="whitespace-pre-line text-muted-foreground mt-4">
+                  <p className="mt-4 whitespace-pre-line text-muted-foreground">
                     {description}
                   </p>
                 </div>
