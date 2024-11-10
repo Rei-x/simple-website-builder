@@ -10,7 +10,8 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
-import { ApiQuery } from "@nestjs/swagger";
+import { ApiNotFoundResponse, ApiQuery } from "@nestjs/swagger";
+import { NotFoundResponse } from "src/dto/NotFoundResponse.dto";
 
 import { CreateWebsiteDto } from "./dto/create-website.dto";
 import { UpdateWebsiteDto } from "./dto/update-website.dto";
@@ -62,8 +63,19 @@ export class WebsiteController {
     return this.websiteService.findOne(+id);
   }
 
+  @ApiNotFoundResponse({
+    type: NotFoundResponse,
+  })
   @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.websiteService.remove(+id);
+  async remove(@Param("id") id: string) {
+    const website = await this.websiteService.findOne(+id);
+
+    if (!website) {
+      throw new NotFoundException();
+    }
+
+    await this.websiteService.remove(+id);
+
+    return website;
   }
 }

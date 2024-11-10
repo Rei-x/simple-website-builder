@@ -57,7 +57,11 @@ export class WebsiteService {
   }
 
   findAll() {
-    return this.prisma.website.findMany();
+    return this.prisma.website.findMany({
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
   }
 
   async findUserWebsites(options?: {
@@ -132,7 +136,9 @@ export class WebsiteService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} website`;
+  async remove(id: number) {
+    await this.prisma.website.delete({
+      where: { id },
+    });
   }
 }

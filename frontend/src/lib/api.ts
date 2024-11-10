@@ -77,6 +77,11 @@ export interface components {
             name?: string;
             title?: string;
         };
+        NotFoundDto: {
+            /** @enum {number} */
+            statusCode: 404;
+            message: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -168,7 +173,15 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string;
+                    "application/json": components["schemas"]["WebsiteEntity"];
+                };
+            };
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundDto"];
                 };
             };
         };

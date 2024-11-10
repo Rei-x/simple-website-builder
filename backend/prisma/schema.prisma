@@ -20,7 +20,7 @@ model Website {
 model Block {
   id        String   @id
   websiteId Int
-  website   Website  @relation(fields: [websiteId], references: [id])
+  website   Website  @relation(fields: [websiteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   order     Int
   type      String
   props     Json
