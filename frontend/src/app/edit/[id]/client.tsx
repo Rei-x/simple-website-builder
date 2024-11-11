@@ -1,14 +1,11 @@
 "use client";
 
-import { ActionBar, type Data, Puck, usePuck } from "@measured/puck";
+import { type Data, Puck } from "@measured/puck";
 import { RocketIcon } from "@radix-ui/react-icons";
-import { useAtom } from "jotai";
-import { EyeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
-import { pageAtom } from "@/atoms/pageData";
 import { Button } from "@/components/ui/button";
 import type { components } from "@/lib/api";
 import { $api } from "@/lib/client";
@@ -68,9 +65,9 @@ export function Client({
                 onClick={() => {
                   updateWebsite.mutate({
                     body: {
-                      name: data.root.props.name,
-                      title: data.root.props.title,
-                      domain: data.root.props.domain,
+                      name: data.root.props?.name,
+                      title: data.root.props?.title,
+                      domain: data.root.props?.domain,
                       blocks: data.content.map((block) => ({
                         id: block.props.id,
                         props: block.props as unknown as Record<string, never>,

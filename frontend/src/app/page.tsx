@@ -1,18 +1,27 @@
 import { PanelsTopLeft, Rocket } from "lucide-react";
+import { redirect } from "next/navigation";
 
 import { CreateWebsite } from "@/components/CreateWebsite";
 import { WebsiteCard } from "@/components/WebsiteCard";
 import { NavUser } from "@/components/nav-user";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchClient } from "@/lib/client";
+import { isLoggedIn } from "@/lib/auth";
+import { serverFetchClient } from "@/lib/client.server";
+
+export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const projectsResponse = await fetchClient.GET("/v1/website");
+  if (!isLoggedIn()) {
+    return redirect("/login");
+  }
+
+  const projectsResponse = await serverFetchClient.GET("/v1/website");
 
   if (projectsResponse.error) {
     return (
       <div className="min-h-screen bg-slate-50">
         Błąd
+        {/* @ts-expect-error ??? */}
         <pre>{JSON.stringify(projectsResponse.error, null, 2)}</pre>
       </div>
     );
@@ -29,13 +38,7 @@ export default async function Page() {
             <h1 className="text-2xl font-bold">Simple Website Builder</h1>
           </div>
           <CreateWebsite className="ml-auto mr-4" />
-          <NavUser
-            user={{
-              name: "Bartosz Gotowski",
-              email: "272647@student.pwr.edu.pl",
-              avatar: "/avatars/shadcn.jpg",
-            }}
-          />
+          <NavUser />
         </div>
       </header>
       {projects.length === 0 ? (

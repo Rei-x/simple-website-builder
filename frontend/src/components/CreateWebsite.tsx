@@ -34,6 +34,7 @@ export const CreateWebsite = ({ className }: { className?: string }) => {
           },
           {
             onSuccess: (website) => {
+              router.refresh();
               router.push(`/edit/${website.id}`);
             },
             onError: () => {

@@ -3,16 +3,41 @@ import {
   Module,
   type NestModule,
 } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
 
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { AuthModule } from "./auth/auth.module";
+import { validate } from "./env.validation";
 import { LoggerMiddleware } from "./logger.middleware";
+import { TypedConfigModule } from "./typed-config/typed-config.module";
+import { TypedConfigService } from "./typed-config/typed-config.service";
+import { UsersModule } from "./users/users.module";
 import { WebsiteModule } from "./website/website.module";
 
 @Module({
-  imports: [WebsiteModule],
+  imports: [
+    ConfigModule.forRoot({
+      validate,
+    }),
+    WebsiteModule,
+    AuthModule,
+    UsersModule,
+    TypedConfigModule,
+    JwtModule.registerAsync({
+      imports: [TypedConfigModule],
+      inject: [TypedConfigService],
+      useFactory: async (typedConfigService: TypedConfigService) => ({
+        secret: typedConfigService.get("JWT_SECRET"),
+        signOptions: {
+          expiresIn: `${typedConfigService.get("JWT_EXPIRATION_TIME")}s`,
+        },
+      }),
+    }),
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TypedConfigService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

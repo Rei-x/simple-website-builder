@@ -4,9 +4,10 @@
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "strict": true,
+    "moduleResolution": "Bundler"
   },
-
   "include": [
     "next-env.d.ts",
     "**/*.ts",

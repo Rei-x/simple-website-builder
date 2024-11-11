@@ -2,7 +2,7 @@ import { Render } from "@measured/puck";
 import { notFound } from "next/navigation";
 import React from "react";
 
-import { fetchClient } from "@/lib/client";
+import { serverFetchClient } from "@/lib/client.server";
 
 import config from "../../../../puck.config";
 
@@ -13,7 +13,7 @@ const Page = async ({
     domain: string;
   };
 }) => {
-  const pageData = await fetchClient.GET("/v1/website", {
+  const pageData = await serverFetchClient.GET("/v1/website", {
     params: {
       query: {
         domain: params.domain,
@@ -21,7 +21,7 @@ const Page = async ({
     },
   });
 
-  const first = pageData.data.at(0);
+  const first = pageData.data?.at(0);
 
   if (!first) {
     return notFound();

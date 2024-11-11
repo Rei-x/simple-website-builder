@@ -1,5 +1,5 @@
-import { IconButton, usePuck } from "@measured/puck";
-import { ChevronLeft, ChevronUp, PanelLeft, PanelRight } from "lucide-react";
+import { usePuck } from "@measured/puck";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import React, { type ReactNode } from "react";
 
@@ -46,7 +46,7 @@ export const Header = ({
           </Button>
         </div>
         <div className="self-center">
-          <p className="font-bold">{puck.appState.data.root.props.name}</p>
+          <p className="font-bold">{puck.appState.data.root.props?.name}</p>
         </div>
         <div className="flex justify-end gap-4">{actions}</div>
       </div>

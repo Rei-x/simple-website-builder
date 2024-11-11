@@ -1,6 +1,7 @@
 import "@measured/puck/puck.css";
+import { notFound } from "next/navigation";
 
-import { fetchClient } from "@/lib/client";
+import { serverFetchClient } from "@/lib/client.server";
 
 import { Client } from "./client";
 
@@ -15,12 +16,17 @@ export default async function Page({
     id: string;
   };
 }) {
-  const website = await fetchClient.GET("/v1/website/{id}", {
+  const website = await serverFetchClient.GET("/v1/website/{id}", {
     params: {
       path: {
         id: params.id,
       },
     },
   });
+
+  if (!website.data) {
+    return notFound();
+  }
+
   return <Client website={website.data} />;
 }

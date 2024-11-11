@@ -15,6 +15,7 @@ model Website {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Block     Block[]
+  Access    Access[]
 }
 
 model Block {
@@ -26,4 +27,30 @@ model Block {
   props     Json
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Access {
+  id        Int      @id @default(autoincrement())
+  websiteId Int
+  website   Website  @relation(fields: [websiteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  displayName String
+  email       String   @unique
+  password    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Access      Access[]
 }
