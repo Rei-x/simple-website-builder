@@ -10,6 +10,13 @@ async function bootstrap() {
   app.enableCors({
     origin: "*",
   });
+
+  if (process.env.NODE_ENV === "development") {
+    app.use(function (_req, _res, next) {
+      setTimeout(next, 500);
+    });
+  }
+
   const config = new DocumentBuilder()
     .setTitle("Cats example")
     .setDescription("The cats API description")

@@ -1,9 +1,11 @@
 "use client";
 
-import { type Data, Puck, usePuck } from "@measured/puck";
+import { ActionBar, type Data, Puck, usePuck } from "@measured/puck";
+import { RocketIcon } from "@radix-ui/react-icons";
 import { useAtom } from "jotai";
+import { EyeIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { pageAtom } from "@/atoms/pageData";
@@ -12,6 +14,7 @@ import type { components } from "@/lib/api";
 import { $api } from "@/lib/client";
 
 import config, { type Props, type RootProps } from "../../../../puck.config";
+import { Header } from "./header";
 
 export function Client({
   website,
@@ -52,7 +55,11 @@ export function Client({
       headerPath={""}
       config={config}
       data={data}
+      iframe={{
+        enabled: false,
+      }}
       overrides={{
+        header: Header,
         headerActions: () => {
           return (
             <>
@@ -78,6 +85,7 @@ export function Client({
                   });
                 }}
               >
+                <RocketIcon />
                 Opublikuj
               </Button>
             </>

@@ -1,5 +1,7 @@
 "use client";
 
+import { Link1Icon } from "@radix-ui/react-icons";
+import { formatDate, formatDistanceToNow } from "date-fns";
 import { ArrowUpRight, Globe, MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -32,19 +34,31 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 export const WebsiteCard = ({
   project,
 }: {
   project: {
     id: number;
+    updatedAt: string;
     name: string;
     domain: string;
   };
 }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const deleteProject = $api.useMutation("delete", "/v1/website/{id}");
+  const [isLoading, setIsLoading] = useState(false);
+  const deleteProject = $api.useMutation("delete", "/v1/website/{id}", {
+    onMutate: () => {
+      setIsLoading(true);
+    },
+  });
   return (
     <>
       <Card className="transition-shadow duration-300 hover:shadow-lg">
@@ -70,12 +84,12 @@ export const WebsiteCard = ({
           </DropdownMenu>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-            <Globe className="h-4 w-4" />
+          <div className="flex items-center">
+            <Link1Icon className="h-4 w-4" />
             <Link
               className={buttonVariants({
                 variant: "link",
-                className: "mx-2",
+                className: "-ml-2 text-slate-500 hover:text-slate-700",
               })}
               target="_blank"
               rel="noopener noreferrer"
@@ -86,7 +100,20 @@ export const WebsiteCard = ({
           </div>
         </CardContent>
         <CardFooter className="flex items-center justify-between">
-          <Badge variant={"default"}>{project.id}</Badge>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Badge className="cursor-default" variant={"default"}>
+                  {formatDistanceToNow(new Date(project.updatedAt), {
+                    addSuffix: true,
+                  })}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                {formatDate(new Date(project.updatedAt), "HH:mm dd.MM.yyyy")}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <Button variant="ghost" size="sm" asChild>
             <Link
               href={`/edit/${project.id}`}
@@ -111,6 +138,7 @@ export const WebsiteCard = ({
             <AlertDialogCancel>Anuluj</AlertDialogCancel>
             <Button
               variant="destructive"
+              loading={isLoading}
               onClick={() => {
                 deleteProject.mutate(
                   {
@@ -124,6 +152,7 @@ export const WebsiteCard = ({
                       toast.success("Strona została usunięta");
                     },
                     onError: (error, lol) => {
+                      setIsLoading(false);
                       console.error(error);
                       toast.error("Wystąpił błąd podczas usuwania strony");
                     },

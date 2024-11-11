@@ -20,7 +20,7 @@
     "migrate:dev": "prisma migrate dev",
     "migrate:dev:create": "prisma migrate dev --create-only",
     "migrate:deploy": "prisma migrate deploy",
-    "prisma:generate": "prisma generate",
+    "prisma:generate": "prisma generate --no-hints",
     "prisma:studio": "prisma studio",
     "prisma:seed": "prisma db seed",
     "postinstall": "pnpm run prisma:generate"

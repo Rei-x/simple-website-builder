@@ -1,0 +1,24 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+index e927ea928834d5e30062d7cdc1f930e42adecb1b..6d67980f365f59125bf54e8ee19183790b861695 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -5518,8 +5518,8 @@ function Puck({
+                         }
+                       ),
+                       /* @__PURE__ */ jsxs21("div", { className: getLayoutClassName("leftSideBar"), children: [
+-                        /* @__PURE__ */ jsx38(SidebarSection, { title: "Components", noBorderTop: true, children: /* @__PURE__ */ jsx38(Components, {}) }),
+-                        /* @__PURE__ */ jsx38(SidebarSection, { title: "Outline", children: /* @__PURE__ */ jsx38(Outline, {}) })
++                        /* @__PURE__ */ jsx38(SidebarSection, { title: "Elementy", noBorderTop: true, children: /* @__PURE__ */ jsx38(Components, {}) }),
++                        /* @__PURE__ */ jsx38(SidebarSection, { title: "Schemat", children: /* @__PURE__ */ jsx38(Outline, {}) })
+                       ] }),
+                       /* @__PURE__ */ jsx38(Canvas, {}),
+                       /* @__PURE__ */ jsx38("div", { className: getLayoutClassName("rightSideBar"), children: /* @__PURE__ */ jsx38(
+@@ -5528,7 +5528,7 @@ function Puck({
+                           noPadding: true,
+                           noBorderTop: true,
+                           showBreadcrumbs: true,
+-                          title: selectedItem ? selectedComponentLabel : "Page",
++                          title: selectedItem ? selectedComponentLabel : "Ustawienia strony",
+                           children: /* @__PURE__ */ jsx38(Fields, {})
+                         }
+                       ) })
