@@ -2,11 +2,14 @@
 
 import { type Data, Puck } from "@measured/puck";
 import { RocketIcon } from "@radix-ui/react-icons";
+import { ShareIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { env } from "@/env";
 import type { components } from "@/lib/api";
 import { $api } from "@/lib/client";
 
@@ -60,6 +63,16 @@ export function Client({
         headerActions: () => {
           return (
             <>
+              <Button variant="secondary" asChild>
+                <Link
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`http://${website.domain}.${new URL(window.origin).host}`}
+                >
+                  <ShareIcon />
+                  Podgląd
+                </Link>
+              </Button>
               <Button
                 loading={updateWebsite.isPending}
                 onClick={() => {

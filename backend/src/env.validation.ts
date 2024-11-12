@@ -1,5 +1,6 @@
 import { plainToInstance } from "class-transformer";
 import {
+  Contains,
   IsEnum,
   IsNumber,
   IsString,
@@ -23,6 +24,10 @@ export class EnvironmentVariables {
   @Min(0)
   @Max(65535)
   PORT: number;
+
+  @IsString()
+  @Contains("http")
+  APP_URL: string;
 
   @IsString()
   @MinLength(16)

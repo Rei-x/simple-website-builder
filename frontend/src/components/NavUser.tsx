@@ -23,7 +23,13 @@ export async function NavUser() {
         <Button variant="outline" className="border-none">
           <Avatar className="h-8 w-8 rounded-lg">
             {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-            <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+            <AvatarFallback className="rounded-lg">
+              {user.data?.displayName
+                .split(" ")
+                .map((name) => name[0])
+                .slice(0, 2)
+                .join("")}
+            </AvatarFallback>
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
             <span className="truncate font-semibold">
@@ -43,8 +49,13 @@ export async function NavUser() {
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="h-8 w-8 rounded-lg">
-              {/* <AvatarImage src={user.avatar} alt={user.name} /> */}
-              <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              <AvatarFallback className="rounded-lg">
+                {user.data?.displayName
+                  .split(" ")
+                  .map((name) => name[0])
+                  .slice(0, 2)
+                  .join("")}
+              </AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-semibold">

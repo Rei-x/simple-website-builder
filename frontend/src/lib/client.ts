@@ -4,7 +4,7 @@ import createClient from "openapi-react-query";
 import type { paths } from "./api";
 
 const fetchClient = createFetchClient<paths>({
-  baseUrl: "http://localhost:3000/api",
+  baseUrl: "/api",
   cache: "no-store",
 });
 

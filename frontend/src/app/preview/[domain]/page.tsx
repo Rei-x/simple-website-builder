@@ -30,7 +30,7 @@ const Page = async ({
   return (
     <Render
       data={{
-        content: first.blocks.toSorted((a, b) => a.order - b.order),
+        content: first.blocks,
         root: {
           title: first.title,
           props: {

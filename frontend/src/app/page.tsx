@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { CreateWebsite } from "@/components/CreateWebsite";
 import { WebsiteCard } from "@/components/WebsiteCard";
-import { NavUser } from "@/components/nav-user";
+import { NavUser } from "@/components/NavUser";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { isLoggedIn } from "@/lib/auth";
 import { serverFetchClient } from "@/lib/client.server";
