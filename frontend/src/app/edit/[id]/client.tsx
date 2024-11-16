@@ -2,6 +2,7 @@
 
 import { type Data, Puck } from "@measured/puck";
 import { RocketIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -60,6 +61,9 @@ export function Client({
         headerActions: () => {
           return (
             <>
+              <Button asChild variant="secondary">
+                <Link href={`/edit/${website.id}/manage`}>Ustawienia</Link>
+              </Button>
               <Button
                 loading={updateWebsite.isPending}
                 onClick={() => {

@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["omitApi"]
 }
 
 datasource db {
@@ -14,8 +15,8 @@ model Website {
   title     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Block     Block[]
-  Access    Access[]
+  blocks    Block[]
+  members   Member[]
 }
 
 model Block {
@@ -34,15 +35,16 @@ enum Role {
   USER
 }
 
-model Access {
-  id        Int      @id @default(autoincrement())
-  websiteId Int
-  website   Website  @relation(fields: [websiteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  role      Role
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Member {
+  id                Int      @id @default(autoincrement())
+  websiteId         Int
+  website           Website  @relation(fields: [websiteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId            Int
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  role              Role
+  hasAcceptedInvite Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
 
 model User {
@@ -52,5 +54,5 @@ model User {
   password    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  Access      Access[]
+  websites    Member[]
 }

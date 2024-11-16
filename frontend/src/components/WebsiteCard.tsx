@@ -1,5 +1,6 @@
 "use client";
 
+import { subject } from "@casl/ability";
 import { Link1Icon } from "@radix-ui/react-icons";
 import { formatDate, formatDistanceToNow } from "date-fns";
 import { ArrowUpRight, Globe, MoreVertical } from "lucide-react";
@@ -8,6 +9,8 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
+import { Can } from "@/hooks/use-permissions";
+import type { SchemaWebsiteEntity } from "@/lib/api";
 import { $api } from "@/lib/client";
 
 import {
@@ -41,16 +44,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 
-export const WebsiteCard = ({
-  project,
-}: {
-  project: {
-    id: number;
-    updatedAt: string;
-    name: string;
-    domain: string;
-  };
-}) => {
+export const WebsiteCard = ({ project }: { project: SchemaWebsiteEntity }) => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,14 +66,16 @@ export const WebsiteCard = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => {
-                  setIsOpen(true);
-                }}
-                className="text-red-600 hover:bg-red-50"
-              >
-                Usuń
-              </DropdownMenuItem>
+              <Can I="delete" this={subject("Website", project)}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setIsOpen(true);
+                  }}
+                  className="text-red-600 hover:bg-red-50"
+                >
+                  Usuń
+                </DropdownMenuItem>
+              </Can>
             </DropdownMenuContent>
           </DropdownMenu>
         </CardHeader>

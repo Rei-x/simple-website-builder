@@ -40,27 +40,23 @@ const randomDomain = () => {
 export class WebsiteService {
   constructor(private prisma: PrismaService) {}
   async create(createWebsiteDto: CreateWebsiteDto, userId: number) {
-    const { Block: blocks, ...website } = await this.prisma.website.create({
+    return await this.prisma.website.create({
       data: {
         domain: randomDomain(),
         name: createWebsiteDto.name,
         title: createWebsiteDto.title ?? "Moja strona",
-        Access: {
+        members: {
           create: {
             role: Role.ADMIN,
             userId,
+            hasAcceptedInvite: true,
           },
         },
       },
       include: {
-        Block: true,
+        blocks: true,
       },
     });
-
-    return {
-      ...website,
-      blocks,
-    };
   }
 
   findAll(userId: number) {
@@ -69,7 +65,7 @@ export class WebsiteService {
         updatedAt: "desc",
       },
       where: {
-        Access: {
+        members: {
           some: {
             userId,
           },
@@ -84,7 +80,7 @@ export class WebsiteService {
   }): Promise<WebsiteEntity[]> {
     const websites = await this.prisma.website.findMany({
       include: {
-        Block: {
+        blocks: {
           orderBy: {
             order: "asc",
           },
@@ -98,7 +94,7 @@ export class WebsiteService {
             domain: options?.domain,
           }
         : {
-            Access: {
+            members: {
               some: {
                 userId: options?.userId,
               },
@@ -106,24 +102,21 @@ export class WebsiteService {
           },
     });
 
-    return websites.map((website) => ({
-      ...website,
-      blocks: website.Block,
-    }));
+    return websites;
   }
 
   async findOne(id: number, userId: number): Promise<WebsiteEntity | null> {
     const website = await this.prisma.website.findUnique({
       where: {
         id,
-        Access: {
+        members: {
           some: {
             userId,
           },
         },
       },
       include: {
-        Block: {
+        blocks: {
           orderBy: {
             order: "asc",
           },
@@ -135,19 +128,14 @@ export class WebsiteService {
       return null;
     }
 
-    const { Block: blocks, ...rest } = website;
-
-    return {
-      ...rest,
-      blocks,
-    };
+    return website;
   }
 
   async update(id: number, userId: number, updateWebsiteDto: UpdateWebsiteDto) {
     await this.prisma.website.update({
       where: {
         id,
-        Access: {
+        members: {
           some: {
             userId,
           },
@@ -157,7 +145,7 @@ export class WebsiteService {
         name: updateWebsiteDto.name,
         title: updateWebsiteDto.title,
         domain: updateWebsiteDto.domain,
-        Block: {
+        blocks: {
           deleteMany: {},
           createMany: {
             data: updateWebsiteDto.blocks.map((block, i) => ({
@@ -170,7 +158,7 @@ export class WebsiteService {
         },
       },
       include: {
-        Block: true,
+        blocks: true,
       },
     });
   }
@@ -179,7 +167,7 @@ export class WebsiteService {
     await this.prisma.website.delete({
       where: {
         id,
-        Access: {
+        members: {
           some: {
             userId,
           },

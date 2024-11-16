@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Providers>{children}</Providers>
-        <Toaster />
+        <Toaster richColors />
         <DateLocale />
       </body>
     </html>

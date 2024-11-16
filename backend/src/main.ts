@@ -1,9 +1,10 @@
 import { ValidationPipe, VersioningType } from "@nestjs/common";
-import { NestFactory } from "@nestjs/core";
+import { HttpAdapterHost, NestFactory } from "@nestjs/core";
 import type { NestExpressApplication } from "@nestjs/platform-express";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { PrismaClientExceptionFilter } from "nestjs-prisma";
 
 import { AppModule } from "./app.module";
 import { TypedConfigService } from "./typed-config/typed-config.service";
@@ -32,6 +33,9 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: "1",
   });
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   const configService = app.get(TypedConfigService);
 

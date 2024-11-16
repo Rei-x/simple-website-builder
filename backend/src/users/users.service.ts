@@ -3,13 +3,15 @@ import * as Prisma from "@prisma/client";
 import * as argon2 from "argon2";
 import { PrismaService } from "nestjs-prisma";
 
-export type User = Prisma.User;
+export type User = Omit<Prisma.User, "password">;
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async getByEmail(email: string): Promise<User | null> {
+  async getByEmail(
+    email: string,
+  ): Promise<(User & { password: string }) | null> {
     return this.prisma.user.findUnique({
       where: {
         email,

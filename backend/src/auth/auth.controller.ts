@@ -121,7 +121,6 @@ export class AuthController {
     @CurrentUser() user: User,
     @Res({ passthrough: true }) res: Response,
   ) {
-    console.log(user);
     const { token } = await this.authService.login(user.email);
 
     res
