@@ -5,7 +5,7 @@ import React, { type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import type config from "../../../../puck.config";
+import type config from "../../../../../puck.config";
 
 export const Header = ({
   children,

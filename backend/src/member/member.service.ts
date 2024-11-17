@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
+import type { Role } from "@prisma/client";
 import { PrismaService } from "nestjs-prisma";
 
 import { CreateMemberDto } from "./dto/create-member.dto";
-import { UpdateMemberDto } from "./dto/update-member.dto";
 import type { MemberEntity } from "./entities/member.entity";
 
 @Injectable()
@@ -55,13 +55,42 @@ export class MemberService {
     });
   }
 
-  update(id: number, updateMemberDto: UpdateMemberDto) {
+  findOneByUserId(userId: number, websiteId: number): Promise<MemberEntity> {
+    return this.prisma.member.findUniqueOrThrow({
+      where: {
+        websiteId_userId: {
+          websiteId,
+          userId,
+        },
+      },
+      include: {
+        user: {
+          omit: {
+            password: true,
+          },
+        },
+      },
+    });
+  }
+
+  updateRole(id: number, role: Role) {
     return this.prisma.member.update({
       where: {
         id,
       },
       data: {
-        role: updateMemberDto.role,
+        role,
+      },
+    });
+  }
+
+  updateInviteStatus(id: number, hasAcceptedInvite: boolean) {
+    return this.prisma.member.update({
+      where: {
+        id,
+      },
+      data: {
+        hasAcceptedInvite,
       },
     });
   }

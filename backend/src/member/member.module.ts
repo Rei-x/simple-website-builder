@@ -9,5 +9,6 @@ import { MemberService } from "./member.service";
   controllers: [MemberController],
   providers: [MemberService],
   imports: [PrismaModule, CaslModule],
+  exports: [MemberService],
 })
 export class MemberModule {}

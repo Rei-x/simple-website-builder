@@ -1,6 +1,7 @@
 import "@measured/puck/puck.css";
 import { notFound } from "next/navigation";
 
+import { checkAuth } from "@/lib/auth";
 import { serverFetchClient } from "@/lib/client.server";
 
 import { Client } from "./client";

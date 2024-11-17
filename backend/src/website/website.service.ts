@@ -1,12 +1,15 @@
+import { accessibleBy } from "@casl/prisma";
 import { Injectable } from "@nestjs/common";
 import { Role } from "@prisma/client";
-import type { InputJsonValue } from "@prisma/client/runtime/library";
+import { InputJsonValue } from "@prisma/client/runtime/library";
 import { randomUUID } from "crypto";
 import { PrismaService } from "nestjs-prisma";
+import { Action, CaslAbilityFactory } from "src/casl/casl-ability.factory";
+import { MemberService } from "src/member/member.service";
 
 import { CreateWebsiteDto } from "./dto/create-website.dto";
 import { UpdateWebsiteDto } from "./dto/update-website.dto";
-import type { WebsiteEntity } from "./entities/website.entity";
+import { WebsiteEntity } from "./entities/website.entity";
 
 const words = [
   "jablko",
@@ -38,9 +41,19 @@ const randomDomain = () => {
 
 @Injectable()
 export class WebsiteService {
-  constructor(private prisma: PrismaService) {}
-  async create(createWebsiteDto: CreateWebsiteDto, userId: number) {
-    return await this.prisma.website.create({
+  constructor(
+    private prisma: PrismaService,
+    private readonly membersService: MemberService,
+    private caslFactory: CaslAbilityFactory,
+  ) {}
+  async create(
+    createWebsiteDto: CreateWebsiteDto,
+    userId: number,
+  ): Promise<WebsiteEntity> {
+    const website = await this.prisma.website.create({
+      select: {
+        id: true,
+      },
       data: {
         domain: randomDomain(),
         name: createWebsiteDto.name,
@@ -53,67 +66,42 @@ export class WebsiteService {
           },
         },
       },
-      include: {
-        blocks: true,
-      },
     });
+
+    return this.findOne(website.id, userId);
   }
 
-  findAll(userId: number) {
-    return this.prisma.website.findMany({
+  async findAll(userId: number) {
+    const casl = await this.caslFactory.createForUser({ userId });
+    const websites = await this.prisma.website.findMany({
       orderBy: {
         updatedAt: "desc",
+      },
+      where: accessibleBy(casl, Action.Read).Website,
+    });
+
+    return Promise.all(
+      websites.map((website) => this.findOne(website.id, userId)),
+    );
+  }
+
+  async findUserWebsites(domain: string): Promise<WebsiteEntity[]> {
+    const website = await this.prisma.website.findUniqueOrThrow({
+      select: {
+        id: true,
       },
       where: {
-        members: {
-          some: {
-            userId,
-          },
-        },
+        domain,
       },
     });
+
+    return [await this.findOne(website.id)];
   }
 
-  async findUserWebsites(options?: {
-    domain?: string;
-    userId?: number;
-  }): Promise<WebsiteEntity[]> {
-    const websites = await this.prisma.website.findMany({
-      include: {
-        blocks: {
-          orderBy: {
-            order: "asc",
-          },
-        },
-      },
-      orderBy: {
-        updatedAt: "desc",
-      },
-      where: options?.domain
-        ? {
-            domain: options?.domain,
-          }
-        : {
-            members: {
-              some: {
-                userId: options?.userId,
-              },
-            },
-          },
-    });
-
-    return websites;
-  }
-
-  async findOne(id: number, userId: number): Promise<WebsiteEntity | null> {
-    const website = await this.prisma.website.findUnique({
+  async findOne(id: number, userId?: number): Promise<WebsiteEntity> {
+    const website = await this.prisma.website.findUniqueOrThrow({
       where: {
         id,
-        members: {
-          some: {
-            userId,
-          },
-        },
       },
       include: {
         blocks: {
@@ -124,11 +112,12 @@ export class WebsiteService {
       },
     });
 
-    if (!website) {
-      return null;
-    }
-
-    return website;
+    return {
+      ...website,
+      member: userId
+        ? await this.membersService.findOneByUserId(userId, website.id)
+        : undefined,
+    };
   }
 
   async update(id: number, userId: number, updateWebsiteDto: UpdateWebsiteDto) {

@@ -131,7 +131,7 @@ export default function UserManagement({
     );
   };
 
-  const updateUserRole = (userId: number, newRole: Role) => {
+  const updateUserRole = (memberId: number, newRole: Role) => {
     updateMember.mutate(
       {
         body: {
@@ -139,7 +139,7 @@ export default function UserManagement({
         },
         params: {
           path: {
-            id: userId.toString(),
+            id: memberId.toString(),
             websiteId: params.id,
           },
         },
@@ -152,15 +152,15 @@ export default function UserManagement({
     );
   };
 
-  const removeUser = (userId: number) => {
-    const user = members.data?.find((member) => member.user.id === userId);
+  const removeUser = (memberId: number) => {
+    const user = members.data?.find((member) => member.id === memberId);
 
     toast.promise(
       deleteMember.mutateAsync(
         {
           params: {
             path: {
-              id: userId.toString(),
+              id: memberId.toString(),
               websiteId: params.id,
             },
           },
@@ -277,16 +277,14 @@ export default function UserManagement({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredUsers?.map(({ user, role }) => (
+              {filteredUsers?.map(({ user, role, id }) => (
                 <TableRow key={user.id}>
                   <TableCell>{user.displayName}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     <Select
                       value={role}
-                      onValueChange={(value: Role) =>
-                        updateUserRole(user.id, value)
-                      }
+                      onValueChange={(value: Role) => updateUserRole(id, value)}
                       disabled={updateMember.isPending}
                     >
                       <SelectTrigger className="w-48">
@@ -309,7 +307,7 @@ export default function UserManagement({
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Akcje</DropdownMenuLabel>
                         <DropdownMenuItem
-                          onClick={() => removeUser(user.id)}
+                          onClick={() => removeUser(id)}
                           className="text-red-600"
                           disabled={deleteMember.isPending}
                         >

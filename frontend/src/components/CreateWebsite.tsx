@@ -1,11 +1,14 @@
 "use client";
 
+import { subject } from "@casl/ability";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "sonner";
 
+import { AbilityContext } from "@/hooks/use-permissions";
+import type { SchemaWebsiteEntity } from "@/lib/api";
 import { $api } from "@/lib/client";
 
 import { Button } from "./ui/button";
@@ -22,6 +25,13 @@ export const CreateWebsite = ({ className }: { className?: string }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const ability = useContext(AbilityContext);
+
+  if (ability.cannot("create", subject("Website", {} as SchemaWebsiteEntity))) {
+    return null;
+  }
+
   return (
     <Button
       onClick={async () => {

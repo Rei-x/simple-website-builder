@@ -29,7 +29,14 @@ export const AbilityContext = createContext(ability);
 export const Can = createContextualCan(AbilityContext.Consumer);
 
 export const usePermissions = () => {
-  const permissions = $api.useQuery("get", "/v1/user/permissions");
+  const permissions = $api.useSuspenseQuery(
+    "get",
+    "/v1/user/permissions",
+    {},
+    {
+      refetchInterval: 3000,
+    },
+  );
 
   ability.update(unpackRules((permissions.data as never) ?? []));
 

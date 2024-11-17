@@ -2,14 +2,15 @@
 
 import { subject } from "@casl/ability";
 import { Link1Icon } from "@radix-ui/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { formatDate, formatDistanceToNow } from "date-fns";
 import { ArrowUpRight, Globe, MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "sonner";
 
-import { Can } from "@/hooks/use-permissions";
+import { AbilityContext, Can } from "@/hooks/use-permissions";
 import type { SchemaWebsiteEntity } from "@/lib/api";
 import { $api } from "@/lib/client";
 
@@ -53,6 +54,37 @@ export const WebsiteCard = ({ project }: { project: SchemaWebsiteEntity }) => {
       setIsLoading(true);
     },
   });
+  const queryClient = useQueryClient();
+
+  const invalidateWebsites = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: $api.queryOptions("get", "/v1/website").queryKey,
+    });
+  };
+
+  const acceptMembership = $api.useMutation(
+    "patch",
+    "/v1/website/{websiteId}/member/{id}",
+    {
+      onSuccess: invalidateWebsites,
+    },
+  );
+  const deleteMembership = $api.useMutation(
+    "delete",
+    "/v1/website/{websiteId}/member/{id}",
+    {
+      onSuccess: invalidateWebsites,
+    },
+  );
+
+  const ability = useContext(AbilityContext);
+
+  const member = project.member;
+
+  if (typeof member === "undefined") {
+    return null;
+  }
+
   return (
     <>
       <Card className="transition-shadow duration-300 hover:shadow-lg">
@@ -96,29 +128,73 @@ export const WebsiteCard = ({ project }: { project: SchemaWebsiteEntity }) => {
           </div>
         </CardContent>
         <CardFooter className="flex items-center justify-between">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Badge className="cursor-default" variant={"default"}>
-                  {formatDistanceToNow(new Date(project.updatedAt), {
-                    addSuffix: true,
-                  })}
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent>
-                {formatDate(new Date(project.updatedAt), "HH:mm dd.MM.yyyy")}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <Button variant="ghost" size="sm" asChild>
-            <Link
-              href={`/edit/${project.id}`}
-              className="flex items-center space-x-1"
-            >
-              <span>Edytuj</span>
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </Button>
+          <Can I="update" this={subject("Website", project)}>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Badge className="cursor-default" variant={"default"}>
+                    {formatDistanceToNow(new Date(project.updatedAt), {
+                      addSuffix: true,
+                    })}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {formatDate(new Date(project.updatedAt), "HH:mm dd.MM.yyyy")}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <Button variant="ghost" size="sm" asChild>
+              <Link
+                href={`/edit/${project.id}`}
+                className="flex items-center space-x-1"
+              >
+                <span>Edytuj</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </Can>
+
+          <Can not I="update" this={subject("Website", project)}>
+            <div className="flex gap-2">
+              <Button
+                variant="secondary"
+                disabled={deleteMembership.isPending}
+                loading={acceptMembership.isPending}
+                onClick={() => {
+                  acceptMembership.mutate({
+                    body: {
+                      hasAcceptedInvite: true,
+                    },
+                    params: {
+                      path: {
+                        websiteId: project.id.toString(),
+                        id: member.id.toString(),
+                      },
+                    },
+                  });
+                }}
+              >
+                Zaakceptuj
+              </Button>
+              <Button
+                variant="ghost"
+                disabled={acceptMembership.isPending}
+                loading={deleteMembership.isPending}
+                onClick={() => {
+                  deleteMembership.mutate({
+                    params: {
+                      path: {
+                        websiteId: project.id.toString(),
+                        id: member.id.toString(),
+                      },
+                    },
+                  });
+                }}
+              >
+                Odrzuć
+              </Button>
+            </div>
+          </Can>
         </CardFooter>
       </Card>
       <AlertDialog open={isOpen} onOpenChange={setIsOpen}>

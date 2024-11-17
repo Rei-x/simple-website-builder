@@ -9,11 +9,15 @@ import { Request } from "express";
 
 import { AppAbility, CaslAbilityFactory } from "./casl-ability.factory";
 
-interface IPolicyHandler {
-  handle(ability: AppAbility, req: Request): boolean;
-}
+type PolicyHandlerCallback = (options: {
+  ability: AppAbility;
+  req: Request;
+  getSubject: typeof CaslAbilityFactory.prototype.getSubject;
+}) => boolean | Promise<boolean>;
 
-type PolicyHandlerCallback = (ability: AppAbility, req: Request) => boolean;
+interface IPolicyHandler {
+  handle: PolicyHandlerCallback;
+}
 
 export type PolicyHandler = IPolicyHandler | PolicyHandlerCallback;
 
@@ -46,7 +50,7 @@ export class PoliciesGuard implements CanActivate {
       userId: req.user.userId,
     });
 
-    return policyHandlers.every((handler) =>
+    return policyHandlers.every(async (handler) =>
       this.execPolicyHandler(handler, ability, req),
     );
   }
@@ -57,8 +61,20 @@ export class PoliciesGuard implements CanActivate {
     req: Request,
   ) {
     if (typeof handler === "function") {
-      return handler(ability, req);
+      return handler({
+        ability,
+        req,
+        getSubject: this.caslAbilityFactory.getSubject.bind(
+          this.caslAbilityFactory,
+        ),
+      });
     }
-    return handler.handle(ability, req);
+    return handler.handle({
+      ability,
+      req,
+      getSubject: this.caslAbilityFactory.getSubject.bind(
+        this.caslAbilityFactory,
+      ),
+    });
   }
 }

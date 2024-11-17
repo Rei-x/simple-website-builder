@@ -16,7 +16,7 @@ import { ApiNotFoundResponse, ApiQuery } from "@nestjs/swagger";
 import { CurrentUser } from "src/auth/current-user.decorator";
 import { JwtAuthenticationGuard } from "src/auth/jwt.guard";
 import { Public } from "src/auth/public.decorator";
-import type { UserPayload } from "src/auth/request-with-user.interface";
+import { UserPayload } from "src/auth/request-with-user.interface";
 import { NotFoundResponse } from "src/dto/NotFoundResponse.dto";
 
 import { CreateWebsiteDto } from "./dto/create-website.dto";
@@ -51,15 +51,13 @@ export class WebsiteController {
     @CurrentUser() user?: UserPayload,
     @Query("domain") domain?: string,
   ): Promise<WebsiteEntity[]> {
-    console.log(user);
     if (!domain && !user) {
       throw new ForbiddenException("Specify domain or log in");
     }
 
-    return this.websiteService.findUserWebsites({
-      domain,
-      userId: user?.userId,
-    });
+    return user
+      ? this.websiteService.findAll(user.userId)
+      : this.websiteService.findUserWebsites(domain);
   }
 
   @Get(":id")

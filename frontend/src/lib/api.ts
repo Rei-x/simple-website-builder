@@ -36,6 +36,38 @@ export interface paths {
         patch: operations["WebsiteController_update_v1"];
         trace?: never;
     };
+    "/v1/website/{websiteId}/member": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MemberController_findAll_v1"];
+        put?: never;
+        post: operations["MemberController_create_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/website/{websiteId}/member/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MemberController_findOne_v1"];
+        put?: never;
+        post?: never;
+        delete: operations["MemberController_remove_v1"];
+        options?: never;
+        head?: never;
+        patch: operations["MemberController_update_v1"];
+        trace?: never;
+    };
     "/v1/auth/login": {
         parameters: {
             query?: never;
@@ -148,38 +180,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/website/{websiteId}/member": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["MemberController_findAll_v1"];
-        put?: never;
-        post: operations["MemberController_create_v1"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/website/{websiteId}/member/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["MemberController_findOne_v1"];
-        put?: never;
-        post?: never;
-        delete: operations["MemberController_remove_v1"];
-        options?: never;
-        head?: never;
-        patch: operations["MemberController_update_v1"];
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -199,6 +199,29 @@ export interface components {
             order: number;
             type: string;
         };
+        /** @enum {string} */
+        Role: Role;
+        UserEntity: {
+            id: number;
+            displayName: string;
+            email: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        MemberEntity: {
+            role: components["schemas"]["Role"];
+            user: components["schemas"]["UserEntity"];
+            id: number;
+            websiteId: number;
+            userId: number;
+            hasAcceptedInvite: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
         WebsiteEntity: {
             id: number;
             name: string;
@@ -209,6 +232,7 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
             blocks: components["schemas"]["BlockEntity"][];
+            member?: components["schemas"]["MemberEntity"];
         };
         CreateBlockDto: {
             props: Record<string, never>;
@@ -226,6 +250,15 @@ export interface components {
             statusCode: NotFoundResponseStatusCode;
             message: string;
         };
+        CreateMemberDto: {
+            role: components["schemas"]["Role"];
+            /** Format: email */
+            email: string;
+        };
+        UpdateMemberDto: {
+            role?: components["schemas"]["Role"];
+            hasAcceptedInvite?: boolean;
+        };
         LoginDto: {
             /** Format: email */
             email: string;
@@ -236,37 +269,6 @@ export interface components {
             email: string;
             password: string;
         };
-        UserEntity: {
-            id: number;
-            displayName: string;
-            email: string;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        /** @enum {string} */
-        Role: Role;
-        CreateMemberDto: {
-            role: components["schemas"]["Role"];
-            /** Format: email */
-            email: string;
-        };
-        MemberEntity: {
-            role: components["schemas"]["Role"];
-            user: components["schemas"]["UserEntity"];
-            id: number;
-            websiteId: number;
-            userId: number;
-            hasAcceptedInvite: boolean;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
-        };
-        UpdateMemberDto: {
-            role: components["schemas"]["Role"];
-        };
     };
     responses: never;
     parameters: never;
@@ -276,17 +278,17 @@ export interface components {
 }
 export type SchemaCreateWebsiteDto = components['schemas']['CreateWebsiteDto'];
 export type SchemaBlockEntity = components['schemas']['BlockEntity'];
+export type SchemaRole = components['schemas']['Role'];
+export type SchemaUserEntity = components['schemas']['UserEntity'];
+export type SchemaMemberEntity = components['schemas']['MemberEntity'];
 export type SchemaWebsiteEntity = components['schemas']['WebsiteEntity'];
 export type SchemaCreateBlockDto = components['schemas']['CreateBlockDto'];
 export type SchemaUpdateWebsiteDto = components['schemas']['UpdateWebsiteDto'];
 export type SchemaNotFoundResponse = components['schemas']['NotFoundResponse'];
+export type SchemaCreateMemberDto = components['schemas']['CreateMemberDto'];
+export type SchemaUpdateMemberDto = components['schemas']['UpdateMemberDto'];
 export type SchemaLoginDto = components['schemas']['LoginDto'];
 export type SchemaRegisterDto = components['schemas']['RegisterDto'];
-export type SchemaUserEntity = components['schemas']['UserEntity'];
-export type SchemaRole = components['schemas']['Role'];
-export type SchemaCreateMemberDto = components['schemas']['CreateMemberDto'];
-export type SchemaMemberEntity = components['schemas']['MemberEntity'];
-export type SchemaUpdateMemberDto = components['schemas']['UpdateMemberDto'];
 export type $defs = Record<string, never>;
 export interface operations {
     WebsiteController_findAll_v1: {
@@ -406,6 +408,130 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["WebsiteEntity"];
                 };
+            };
+        };
+    };
+    MemberController_findAll_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Website ID */
+                websiteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberEntity"][];
+                };
+            };
+        };
+    };
+    MemberController_create_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Website ID */
+                websiteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateMemberDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Member doesn't have an account */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotFoundResponse"];
+                };
+            };
+        };
+    };
+    MemberController_findOne_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description Website ID */
+                websiteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberEntity"];
+                };
+            };
+        };
+    };
+    MemberController_remove_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description Website ID */
+                websiteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MemberController_update_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                /** @description Website ID */
+                websiteId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMemberDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -552,135 +678,11 @@ export interface operations {
             };
         };
     };
-    MemberController_findAll_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Website ID */
-                websiteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MemberEntity"][];
-                };
-            };
-        };
-    };
-    MemberController_create_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Website ID */
-                websiteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateMemberDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Member doesn't have an account */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotFoundResponse"];
-                };
-            };
-        };
-    };
-    MemberController_findOne_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description Website ID */
-                websiteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MemberEntity"];
-                };
-            };
-        };
-    };
-    MemberController_remove_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description Website ID */
-                websiteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    MemberController_update_v1: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                /** @description Website ID */
-                websiteId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateMemberDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-}
-export enum NotFoundResponseStatusCode {
-    Value404 = 404
 }
 export enum Role {
     ADMIN = "ADMIN",
     USER = "USER"
+}
+export enum NotFoundResponseStatusCode {
+    Value404 = 404
 }

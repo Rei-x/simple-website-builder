@@ -1,10 +1,15 @@
 import { Role } from "@prisma/client";
-import { IsEnum } from "class-validator";
+import { IsBoolean, IsEnum, IsOptional } from "class-validator";
 
 import { RoleEnumDecorator } from "../entities/member.entity";
 
 export class UpdateMemberDto {
   @IsEnum(Role)
+  @IsOptional()
   @RoleEnumDecorator()
-  role: Role;
+  role?: Role;
+
+  @IsBoolean()
+  @IsOptional()
+  hasAcceptedInvite?: boolean;
 }

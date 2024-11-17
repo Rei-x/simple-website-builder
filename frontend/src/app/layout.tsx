@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
+import { isLoggedIn } from "@/lib/auth";
 
 import { DateLocale } from "./date-locale";
 import { Providers } from "./providers";
@@ -16,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers isLoggedIn={isLoggedIn()}>{children}</Providers>
         <Toaster richColors />
         <DateLocale />
       </body>

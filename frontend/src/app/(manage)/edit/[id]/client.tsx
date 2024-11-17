@@ -1,5 +1,6 @@
 "use client";
 
+import { subject } from "@casl/ability";
 import { type Data, Puck } from "@measured/puck";
 import { RocketIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
@@ -8,10 +9,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Can } from "@/hooks/use-permissions";
 import type { components } from "@/lib/api";
 import { $api } from "@/lib/client";
 
-import config, { type Props, type RootProps } from "../../../../puck.config";
+import config, { type Props, type RootProps } from "../../../../../puck.config";
 import { Header } from "./header";
 
 export function Client({
@@ -41,8 +43,7 @@ export function Client({
       router.refresh();
       toast.success("Strona została opublikowana");
     },
-    onError: (e, hello) => {
-      console.log(e, hello);
+    onError: (e) => {
       toast.error("Błąd podczas publikowania strony");
     },
   });
@@ -61,9 +62,11 @@ export function Client({
         headerActions: () => {
           return (
             <>
-              <Button asChild variant="secondary">
-                <Link href={`/edit/${website.id}/manage`}>Ustawienia</Link>
-              </Button>
+              <Can I="manage" this={subject("Website", website)}>
+                <Button asChild variant="secondary">
+                  <Link href={`/edit/${website.id}/manage`}>Ustawienia</Link>
+                </Button>
+              </Can>
               <Button
                 loading={updateWebsite.isPending}
                 onClick={() => {

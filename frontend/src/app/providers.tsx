@@ -28,10 +28,20 @@ const PermissionProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const Providers = ({ children }: { children: ReactNode }) => {
+export const Providers = ({
+  children,
+  isLoggedIn,
+}: {
+  children: ReactNode;
+  isLoggedIn: boolean;
+}) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <PermissionProvider>{children}</PermissionProvider>
+      {isLoggedIn ? (
+        <PermissionProvider>{children}</PermissionProvider>
+      ) : (
+        children
+      )}
     </QueryClientProvider>
   );
 };

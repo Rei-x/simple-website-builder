@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Prisma, Role } from "@prisma/client";
-import type { UserEntity } from "src/users/entities/user.entity";
+import { UserEntity } from "src/users/entities/user.entity";
 
 export const RoleEnumDecorator = () =>
   ApiProperty({
