@@ -2,10 +2,12 @@ import { cookies } from "next/headers";
 import createFetchClient from "openapi-fetch";
 import "server-only";
 
+import { env } from "@/env";
+
 import type { paths } from "./api";
 
 export const serverFetchClient = createFetchClient<paths>({
-  baseUrl: "http://localhost:4000",
+  baseUrl: env.NEXT_PUBLIC_API_URL,
   cache: "no-store",
   fetch(input) {
     return fetch(input, {

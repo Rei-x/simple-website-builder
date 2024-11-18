@@ -18,7 +18,7 @@ module.exports = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:4000/:path*",
+        destination: `${env.NEXT_PUBLIC_API_URL}/:path*`,
       },
     ];
   },
