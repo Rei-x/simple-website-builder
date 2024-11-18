@@ -1,13 +1,17 @@
 {
-  "name": "nest-typescript-starter",
+  "name": "backend",
   "private": true,
   "version": "1.0.0",
   "description": "Nest TypeScript starter repository",
   "license": "MIT",
+  "files": [
+    "dist",
+    "prisma"
+  ],
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "node dist/main.js",
     "dev": "docker compose up -d && nest start --watch",
     "start:debug": "nest start --debug --watch --watchAssets",
     "start:prod": "node dist/main",

@@ -1,7 +1,11 @@
 {
-  "name": "my-app",
+  "name": "frontend",
   "version": "1.0.0",
   "private": true,
+  "files": [
+    ".next",
+    "next.config.js"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build --experimental-build-mode compile",
