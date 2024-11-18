@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
 import { toast } from "sonner";
 
+import { env } from "@/env";
 import { AbilityContext, Can } from "@/hooks/use-permissions";
 import type { SchemaWebsiteEntity } from "@/lib/api";
 import { $api } from "@/lib/client";
@@ -121,9 +122,9 @@ export const WebsiteCard = ({ project }: { project: SchemaWebsiteEntity }) => {
               })}
               target="_blank"
               rel="noopener noreferrer"
-              href={`http://${project.domain}.localhost:3000`}
+              href={`${process.env.NODE_ENV === "production" ? "https" : "http"}://${project.domain}.${env.NEXT_PUBLIC_FRONTEND_DOMAIN}`}
             >
-              {project.domain}.localhost:3000
+              {`${process.env.NODE_ENV === "production" ? "https" : "http"}://${project.domain}.${env.NEXT_PUBLIC_FRONTEND_DOMAIN}`}
             </Link>
           </div>
         </CardContent>

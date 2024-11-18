@@ -72,7 +72,9 @@ export class AuthController {
   @UseGuards(JwtAuthenticationGuard)
   @Post("logout")
   async logout(@Res() res: Response) {
-    return res.clearCookie("Authentication").redirect("http://localhost:3000");
+    return res
+      .clearCookie("Authentication")
+      .redirect(this.typedConfigService.get("FRONTEND_URL"));
   }
 
   @HttpCode(200)
@@ -132,6 +134,6 @@ export class AuthController {
             this.typedConfigService.get("JWT_EXPIRATION_TIME") * 1000,
         ),
       })
-      .redirect("http://localhost:3000");
+      .redirect(this.typedConfigService.get("FRONTEND_URL"));
   }
 }

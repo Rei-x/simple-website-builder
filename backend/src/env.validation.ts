@@ -25,6 +25,9 @@ export class EnvironmentVariables {
   PORT: number;
 
   @IsString()
+  FRONTEND_URL: string;
+
+  @IsString()
   @MinLength(16)
   JWT_SECRET: string;
 
