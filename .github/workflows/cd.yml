@@ -32,15 +32,28 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build and push backend
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ghcr.io/rei-x/swb:latest
-          cache-from: type=registry,ref=ghcr.io/rei-x/swb:latest
+          tags: ghcr.io/rei-x/swb-backend:latest
+          cache-from: type=registry,ref=ghcr.io/rei-x/swb-backend:latest
           cache-to: type=inline
           network: host
+          target: backend
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/rei-x/swb-frontend:latest
+          cache-from: type=registry,ref=ghcr.io/rei-x/swb-frontend:latest
+          cache-to: type=inline
+          network: host
+          target: frontend
+
       - name: Trigger build
         run: |
           curl --request GET '${{ secrets.COOLIFY_WEBHOOK }}' --header 'Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}'
