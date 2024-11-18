@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "dev": "next dev",
-    "build": "next build --experimental-build-mode compile",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint && tsc --noEmit",
     "format": "prettier --write .",
