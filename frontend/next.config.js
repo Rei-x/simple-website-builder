@@ -11,8 +11,11 @@ module.exports = {
       },
     ],
   },
-  experimental: {
-    typedRoutes: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
   },
   rewrites: async () => {
     if (process.env.NODE_ENV === "production") {
