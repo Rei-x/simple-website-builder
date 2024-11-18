@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+import { env } from "./env";
+
 export async function middleware(req: NextRequest) {
   const url = new URL(req.url);
   const hostname = req.headers.get("host") || "";
@@ -9,7 +11,7 @@ export async function middleware(req: NextRequest) {
 
   const subdomains = hostname.split(".");
 
-  if (subdomains.length < 2) {
+  if (subdomains.length <= env.NEXT_PUBLIC_FRONTEND_DOMAIN.split(".").length) {
     return NextResponse.next();
   }
 
