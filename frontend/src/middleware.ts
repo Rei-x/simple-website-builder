@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
 
   const subdomains = hostname.split(".");
 
-  if (subdomains.length !== 2) {
+  if (subdomains.length < 2) {
     return NextResponse.next();
   }
 
