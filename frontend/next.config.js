@@ -15,6 +15,10 @@ module.exports = {
     typedRoutes: true,
   },
   rewrites: async () => {
+    if (process.env.NODE_ENV === "production") {
+      return [];
+    }
+
     return [
       {
         source: "/api/:path*",
