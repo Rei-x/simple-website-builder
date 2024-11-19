@@ -78,8 +78,6 @@ export const WebsiteCard = ({ project }: { project: SchemaWebsiteEntity }) => {
     },
   );
 
-  const ability = useContext(AbilityContext);
-
   const member = project.member;
 
   if (typeof member === "undefined") {
