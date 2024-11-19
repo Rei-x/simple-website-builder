@@ -1,5 +1,4 @@
 import { type Config } from "@measured/puck";
-import Image from "next/image";
 
 import { FAQ, type FAQProps } from "@/components/FAQ";
 import { Footer, type FooterProps } from "@/components/Footer";
@@ -83,8 +82,7 @@ export const config: Config<Props, RootProps> = {
           </div>
 
           <div className="relative h-96 w-full">
-            <Image
-              fill
+            <img
               src={imageUrl}
               alt=""
               className="w-full rounded-lg object-cover"
@@ -97,6 +95,7 @@ export const config: Config<Props, RootProps> = {
       fields: {
         title: { type: "text", label: "Tytuł" },
         description: { type: "textarea", label: "Opis" },
+        image: { type: "text", label: "Zdjęcie" },
         stats: {
           label: "Statystyki",
           getItemSummary: (item) => item.name,
