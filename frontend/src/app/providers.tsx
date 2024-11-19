@@ -1,6 +1,10 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  MutationCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import React, { type ReactNode } from "react";
 
@@ -8,15 +12,13 @@ import { AbilityContext, usePermissions } from "@/hooks/use-permissions";
 import { $api } from "@/lib/client";
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    mutations: {
-      onSuccess: async () => {
-        await queryClient.refetchQueries({
-          queryKey: $api.queryOptions("get", "/v1/user/permissions").queryKey,
-        });
-      },
+  mutationCache: new MutationCache({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: $api.queryOptions("get", "/v1/user/permissions").queryKey,
+      });
     },
-  },
+  }),
 });
 
 const PermissionProvider = ({ children }: { children: ReactNode }) => {
