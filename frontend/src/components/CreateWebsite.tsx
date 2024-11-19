@@ -2,6 +2,7 @@
 
 import { subject } from "@casl/ability";
 import { PlusIcon } from "@radix-ui/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
@@ -22,6 +23,8 @@ export const CreateWebsite = ({ className }: { className?: string }) => {
       setIsLoading(false);
     },
   });
+
+  const queryClient = useQueryClient();
 
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -46,6 +49,9 @@ export const CreateWebsite = ({ className }: { className?: string }) => {
             onSuccess: (website) => {
               router.refresh();
               router.push(`/edit/${website.id}`);
+              void queryClient.invalidateQueries({
+                queryKey: $api.queryOptions("get", "/v1/website").queryKey,
+              });
             },
             onError: () => {
               setIsLoading(false);

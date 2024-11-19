@@ -54,6 +54,9 @@ export const WebsiteCard = ({ project }: { project: SchemaWebsiteEntity }) => {
     onMutate: () => {
       setIsLoading(true);
     },
+    onSuccess: () => {
+      invalidateWebsites();
+    },
   });
   const queryClient = useQueryClient();
 
